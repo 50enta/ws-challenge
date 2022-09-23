@@ -1,5 +1,7 @@
 # ws-challenge
 
+>  
+
 
 ## Part I – Answers for Debug Systems Issues
 
@@ -7,10 +9,9 @@
 
 2. 
 
-	 2.1: 
+	1. 
 
-
-	 2.2: 
+	2. 
 
 
 3. 
