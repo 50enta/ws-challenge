@@ -52,7 +52,7 @@ Executando `docker network ls`, será possível confirmar a existência da rede 
 Por questões de organização, criaremos pastas para organizar os ficheiros relacionados à cada container. O container associado ao springBoot será denominado *wit-test*, pelo que a pasta criada poderá também ter o mesmo nome.
 
 
-`cd`
+`cd ~`
 
 `mkdir wit-test`
 
@@ -84,7 +84,7 @@ Finda a execução do último comando, poderá visualizar as imagens em causa a 
 
 Até então só existe a imagem que por sua vez está pronta para ser utilizada na criação do container. O seguinte comando criará o container, permitirá que esteja visível/acessível a partir de fora na porta 8080 e ainda garantirá que seja o serviço que iniciará com o sistema operativo:
 
-`docker run -d --restart unless-stopped -p 8080:8080 wit-test`
+`docker run -d --restart unless-stopped -p 8080:8080 --net redewit --name wit-test`
 
 É possível confirmar executando `docker ps` a existência do container e os respectivos detalhes.
 
@@ -97,8 +97,38 @@ O resultado deverá ser idêntico ao seguinte:
 
 ![A test image](c1.png)
 
-### Crianção e configuração do Proxy
 
+### Crianção e configuração do Reverse Proxy
+Agora que configuramos o container da aplicação, partiremos para a configuração do reverse proxy que por sua vez fará o forward do tráfego para a aplicação.
+
+Antes de tudo, utilizei o comando `docker pull httpd:latest` para puxar a imagem da última versão do httpd.
+
+Na pasta proxy, criamos o directório **proxy** para conter o ficheiro **Dockerfile**
+
+`mkdir proxy`
+
+`nano proxy/Dockerfile`
+
+Conteúdo do ficheiro:
+
+````
+# The Base Image used to create this Image
+FROM httpd:latest
+
+# to Copy a file named httpd.conf from present working directory to the /usr/local/apache2/conf inside the container
+COPY httpd.conf /usr/local/apache2/conf/httpd.conf
+
+# This is the Additional Directory where we are going to keep our Virtualhost configuraiton files
+RUN mkdir -p /usr/local/apache2/conf/sites/
+
+# To tell docker to expose this port
+EXPOSE 90
+
+CMD ["httpd", "-D", "FOREGROUND"]
+
+````
+
+Ainda na pasta criada **proxy**, criei o ficheiro de configuração``nano httpd.conf`` com o conteúdo do seguinte link: ![Apache2 conf file](httpd.conf)
 
 
 ### Criação e configuração do LB
