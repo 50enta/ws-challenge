@@ -40,6 +40,13 @@ A partir do comando `scp wit-cicd-challenge.jar wit@192.168.31.12:/home/wit/`, g
 ### Arquitetura e descrição da proposta
 
 
+### Criação e configuração da rede
+
+Antes de iniciar com a criação dos containers, foi criada um rede bridge para conectarmos posterior conectar todos os containers que forem criados. O seguinte comando foi utilizado para criar a rede com o nome redewit
+
+`docker network create --driver=bridge redewit`
+
+Executando `docker network ls`, será possível confirmar a existência da rede previamente criada.
 
 ### Criação e configuração do container SpringBoot
 
