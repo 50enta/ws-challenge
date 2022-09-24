@@ -180,11 +180,10 @@ O conteúdo:
     # The ProxyPass directive specifies the mapping of incoming requests to the backend server (or a cluster of servers known as a Balancer group).
     # It proxies the requests only with matching URI “/blog”
 
-    ProxyPass /wit-test 127.0.0.1:8080/
-
     #To ensure that and Location: headers generated from the backend are modified to point to the reverse proxy, instead of back to itself, #the ProxyPassReverse directive is most often required:
-
-    ProxyPassReverse /wit-test 127.0.0.1:8080/
+    
+    ProxyPass /wit-test http://127.0.0.1:8080/
+    ProxyPassReverse /wit-test http://127.0.0.1:8080/
 	
 </VirtualHost>
 ````
@@ -211,7 +210,8 @@ A última configuração para esta etapa é a criação do container, associado 
 ``
 docker container run
 --publish 90:90 
--d --restart unless-stopped --name proxy
+-d --restart unless-stopped 
+--name proxy --net redewit
 -v /home/wit/apps/docker/apacheconf/sites:/usr/local/apache2/conf/sites
 -v /home/wit/apps/docker/apacheconf/htmlfiles:/usr/local/apache2/demowit
 proxy
