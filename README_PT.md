@@ -132,6 +132,103 @@ Ainda na pasta criada **proxy**, criei o ficheiro de configuração``nano httpd.
 
 O Build e criação da imagem a partir do ficheiro **proxy/Dockerfile** será realizado após executar o comando `docker build -t proxy proxy/` e o mesmo é denominado *proxy* e pode ser confirmado executando `docker images`
 
+
+Segue a criação do workspace que será usado para o *mount* no container e irá conter alguns ficheiros de configuração. São 2 directórios, onde o primeiro armazena os ficheiros *.conf* e o segundo os ficheiros *html*
+
+
+`mkdir -p /home/wit/apps/docker/apacheconf/sites`
+
+`mkdir -p /home/wit/apps/docker/apacheconf/htmlfiles`
+
+Agora a criação do ficheiro *.conf* denominado *demowit* para conter o conteúdo a seguir:
+
+`nano /home/wit/apps/docker/apacheconf/sites/demowit.conf`
+
+O conteúdo:
+
+````
+ <VirtualHost *:90>
+	
+	ServerName demowit.local
+	ServerAlias www.demowit.local
+
+	ServerAdmin demo@exemplo.com
+	DocumentRoot /usr/local/apache2/demowit
+	
+	<Directory "/usr/local/apache2/demowit">
+		Order allow,deny
+		AllowOverride All
+		Allow from all
+		Require all granted
+	</Directory>
+
+    #Load the SSL module that is needed to terminate SSL on Apache
+    LoadModule ssl_module modules/mod_ssl.so
+
+    #This directive toggles the usage of the SSL/TLS Protocol Engine for proxy. Without this you cannot use HTTPS URL as your Origin Server
+    SSLProxyEngine on
+
+    # To prevent SSL Offloading
+    # Set the X-Forwarded-Proto to be https for your Origin Server to understand that this request is made over HTTPS #https://httpd.apache.org/docs/2.2/mod/mod_headers.html#requestheader.
+
+    RequestHeader set X-Forwarded-Proto “https”
+    RequestHeader set X-Forwarded-Port “443”	
+
+    ErrorLog logs/demowit-error.log
+    CustomLog logs/demowit-access.log combined
+
+    # The ProxyPass directive specifies the mapping of incoming requests to the backend server (or a cluster of servers known as a Balancer group).
+    # It proxies the requests only with matching URI “/blog”
+
+    ProxyPass /wit-test 127.0.0.1:8080/
+
+    #To ensure that and Location: headers generated from the backend are modified to point to the reverse proxy, instead of back to itself, #the ProxyPassReverse directive is most often required:
+
+    ProxyPassReverse /wit-test 127.0.0.1.8080/
+	
+</VirtualHost>
+````
+
+Agora a criação do ficheiro html que servirá para landing page
+
+`nano /home/wit/apps/docker/apacheconf/htmlfiles/index.html`
+
+O conteúdo
+
+````
+<html>
+	<head>
+		<title>demowit</title>
+	</head>
+	<body>
+		<h2> It's working... </h2>
+	</body>
+</html>
+````
+
+A última configuração para esta etapa é a criação do container, associado à publicação da porta e o mount dos directórios/ficheiros a serem utilizados no container.
+
+``
+docker container run \
+--publish 90:90 \
+-d --name apacheserver \
+-v /home/wit/apps/docker/apacheconf/sites:/usr/local/apache2/conf/sites \
+-v /home/wit/apps/docker/apacheconf/htmlfiles:/usr/local/apache2/demowit \
+httpd-proxyenabled
+``
+
+Lembrando que configurei a porta 90 para o reverse proxy.
+
+
+No ficheiro */etc/hosts*, deve associar o ip ao dns local que está sendo utilizado nos ficheiros:
+
+* 127.0.0.1   demowit.local
+
+>Para testar esta configuração, no browser:
+>> `<ip-do-seu-servidor>:90` no browser, fora do server e mesma rede
+>> `curl demowit.local:90/wit-test/` dentro do server
+
+
 ### Criação e configuração do LB
 
 
