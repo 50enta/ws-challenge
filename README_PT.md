@@ -1,6 +1,3 @@
-# ws-challenge
-
->  
 
 
 ## Part I – Answers for Debug Systems Issues
@@ -21,11 +18,11 @@
 
 
 
-Part II – Linux Laboratory
+## Part II – Linux Laboratory
 
 ![A test image](lb.png)
 
-* **Criação da Máquina virtual, instalação e configuração do Sistema Operativo**
+### Criação da Máquina virtual, instalação e configuração do Sistema Operativo
 
 No meu caso, utilizei a versão 6.x do virtual box, de onde criei uma máquina virtual e instalei o SO conforme proposto.
 Garanti que todos pacotes estão actualizados, instalei o `net-tools` , o `openssh` e configurei Bridged Adapter como o tipo de rede para a VM em causa.
@@ -36,4 +33,21 @@ Garanti que todos pacotes estão actualizados, instalei o `net-tools` , o `opens
 A partir do comando `scp wit-cicd-challenge.jar wit@192.168.31.12:/home/wit/`, garanti que o ficheiro `.jar` fosse carregado da minha máquina (windows no meu caso) para a VM.
 
 
-* **Processo de intalação do docker**
+### Processo de intalação do docker
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
