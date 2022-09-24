@@ -76,7 +76,7 @@ Onde:
 
 De seguida, executei o seguinte comando para criar uma imagem do Docker para o projeto Spring Boot atual:
 
-`docker build -t wit-test wit-test`
+`docker build -t wit-test wit-test/`
 
 Nota que o primeiro primeiro parâmentro refere-se ao nome da imagem e o segundo à pasta onde deverá achar os ficheiros a serem usados para o build.
 
@@ -125,11 +125,12 @@ RUN mkdir -p /usr/local/apache2/conf/sites/
 EXPOSE 90
 
 CMD ["httpd", "-D", "FOREGROUND"]
-
 ````
 
-Ainda na pasta criada **proxy**, criei o ficheiro de configuração``nano httpd.conf`` com o conteúdo do seguinte link: ![Apache2 conf file](httpd.conf)
+Ainda na pasta criada **proxy**, criei o ficheiro de configuração``nano httpd.conf`` com o conteúdo do seguinte link: ![Apache2 Conf File](httpd.conf)
 
+
+O Build e criação da imagem a partir do ficheiro **proxy/Dockerfile** será realizado após executar o comando `docker build -t proxy proxy/` e o mesmo é denominado *proxy* e pode ser confirmado executando `docker images`
 
 ### Criação e configuração do LB
 
