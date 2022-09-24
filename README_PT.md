@@ -88,7 +88,7 @@ Até então só existe a imagem que por sua vez está pronta para ser utilizada 
 
 Neste momento já podemos visualizar o resultado a partir do exterior (navegador da nossa máquina host que está rodar a VM):
 
->> `<ip-do-seu-servidor>:8080`
+> `<ip-do-seu-servidor>:8080`
 
 O resultado deverá ser idêntico ao seguinte:
 
