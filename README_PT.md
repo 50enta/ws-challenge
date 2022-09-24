@@ -184,7 +184,7 @@ O conteúdo:
 
     #To ensure that and Location: headers generated from the backend are modified to point to the reverse proxy, instead of back to itself, #the ProxyPassReverse directive is most often required:
 
-    ProxyPassReverse /wit-test 127.0.0.1.8080/
+    ProxyPassReverse /wit-test 127.0.0.1:8080/
 	
 </VirtualHost>
 ````
@@ -209,12 +209,12 @@ O conteúdo
 A última configuração para esta etapa é a criação do container, associado à publicação da porta e o mount dos directórios/ficheiros a serem utilizados no container.
 
 ``
-docker container run \
---publish 90:90 \
--d --name apacheserver \
--v /home/wit/apps/docker/apacheconf/sites:/usr/local/apache2/conf/sites \
--v /home/wit/apps/docker/apacheconf/htmlfiles:/usr/local/apache2/demowit \
-httpd-proxyenabled
+docker container run
+--publish 90:90 
+-d --restart unless-stopped --name proxy
+-v /home/wit/apps/docker/apacheconf/sites:/usr/local/apache2/conf/sites
+-v /home/wit/apps/docker/apacheconf/htmlfiles:/usr/local/apache2/demowit
+proxy
 ``
 
 Lembrando que configurei a porta 90 para o reverse proxy.
@@ -222,11 +222,10 @@ Lembrando que configurei a porta 90 para o reverse proxy.
 
 No ficheiro */etc/hosts*, deve associar o ip ao dns local que está sendo utilizado nos ficheiros:
 
-* 127.0.0.1   demowit.local
+* 127.0.0.1			demowit.local
 
->Para testar esta configuração, no browser:
->> `<ip-do-seu-servidor>:90` no browser, fora do server e mesma rede
->> `curl demowit.local:90/wit-test/` dentro do server
+>Para testar esta configuração:
+>> `<ip-do-seu-servidor>:90` no browser, fora do server e mesma rede, e `curl demowit.local:90/wit-test/` dentro do server
 
 
 ### Criação e configuração do LB
@@ -235,7 +234,7 @@ No ficheiro */etc/hosts*, deve associar o ip ao dns local que está sendo utiliz
 
 ### Configurações gerais do processo
 
-Agora que o fluxo todo está funcionar, activaremos o firewall para garantir que os acessos serão apenas a partir da porta *:80* para http e porta *:22* para conectar ao server usando SSH.
+Agora que o fluxo todo está funcionar, activaremos o firewall para garantir que os acessos serão apenas a partir da porta **:80** para http e porta **:22** para conectar ao server usando SSH.
 
 ````
 sudo ufw limit 22/tcp
