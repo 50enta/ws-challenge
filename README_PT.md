@@ -4,11 +4,13 @@
 
 1. 
 
+
 2. 
 
-		1. 
 
-		2. 
+* 2.1) 
+
+* 2.2)  
 
 
 3. 
@@ -38,6 +40,8 @@ A partir do comando `scp wit-cicd-challenge.jar wit@192.168.31.12:/home/wit/`, g
 
 
 ### Arquitetura e descrição da proposta
+
+![A test image](sp.png)
 
 
 ### Criação e configuração da rede
@@ -181,7 +185,7 @@ O conteúdo:
     # It proxies the requests only with matching URI “/blog”
 
     #To ensure that and Location: headers generated from the backend are modified to point to the reverse proxy, instead of back to itself, #the ProxyPassReverse directive is most often required:
-    
+
     ProxyPass /wit-test http://127.0.0.1:8080/
     ProxyPassReverse /wit-test http://127.0.0.1:8080/
 	
