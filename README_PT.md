@@ -6,6 +6,7 @@
 
 
 2. 
+3. 
 
 
 * 2.1) 
@@ -34,7 +35,7 @@ Garanti que todos pacotes estão actualizados, instalei o *net-tools* , o *opens
 A partir do comando `scp wit-cicd-challenge.jar wit@192.168.31.12:/home/wit/`, garanti que o ficheiro *.jar* fosse carregado da minha máquina (windows no meu caso) para a VM.
 
 
-### Processo de intalação do docker e garantir que irá executar sem o *sudo*
+### Intalação do docker e garantir que irá executar sem o *sudo*
 
 
 
@@ -66,7 +67,7 @@ Por questões de organização, criaremos pastas para organizar os ficheiros rel
 
 Criei também na pasta o ficheiro com o nome **Dockerfile** e copiei o seguinte conteúdo:
 
-````
+````dockerfile
 FROM openjdk:11
 COPY wit-test/wit-cicd-challenge.jar wit-cicd-challenge.jar
 ENTRYPOINT ["java", "-jar", "/wit-cicd-challenge.jar"]
@@ -114,7 +115,7 @@ Na pasta proxy, criamos o directório **proxy** para conter o ficheiro **Dockerf
 
 Conteúdo do ficheiro:
 
-````
+````dockerfile
 # The Base Image used to create this Image
 FROM httpd:latest
 
@@ -138,7 +139,6 @@ O Build e criação da imagem a partir do ficheiro **proxy/Dockerfile** será re
 
 Segue a criação do workspace que será usado para o *mount* no container e irá conter alguns ficheiros de configuração. São 2 directórios, onde o primeiro armazena os ficheiros *.conf* e o segundo os ficheiros *html*
 
-
 `mkdir -p /home/wit/apps/docker/apacheconf/sites`
 
 `mkdir -p /home/wit/apps/docker/apacheconf/htmlfiles`
@@ -149,7 +149,7 @@ Agora a criação do ficheiro *.conf* denominado *demowit* para conter o conteú
 
 O conteúdo:
 
-````
+````dockerfile
  <VirtualHost *:90>
 	
 	ServerName demowit.local
@@ -168,11 +168,12 @@ O conteúdo:
     #Load the SSL module that is needed to terminate SSL on Apache
     LoadModule ssl_module modules/mod_ssl.so
 
-    #This directive toggles the usage of the SSL/TLS Protocol Engine for proxy. Without this you cannot use HTTPS URL as your Origin Server
+    #This directive toggles the usage of the SSL/TLS Protocol Engine for proxy. 
+    #Without this you cannot use HTTPS URL as your Origin Server
     SSLProxyEngine on
 
     # To prevent SSL Offloading
-    # Set the X-Forwarded-Proto to be https for your Origin Server to understand that this request is made over HTTPS #https://httpd.apache.org/docs/2.2/mod/mod_headers.html#requestheader.
+    # Set the X-Forwarded-Proto to be https for your Origin Server to understand that this request is made over HTTPS 
 
     RequestHeader set X-Forwarded-Proto “https”
     RequestHeader set X-Forwarded-Port “443”	
@@ -197,7 +198,7 @@ Agora a criação do ficheiro html que servirá para landing page
 
 O conteúdo
 
-````
+````html
 <html>
 	<head>
 		<title>demowit</title>
@@ -234,6 +235,8 @@ No ficheiro */etc/hosts*, deve associar o ip ao dns local que está sendo utiliz
 	- imagens de demonstração,
 		* ambos cenários)
 
+
+
 ### Criação e configuração do LB
 
 
@@ -242,12 +245,14 @@ No ficheiro */etc/hosts*, deve associar o ip ao dns local que está sendo utiliz
 
 Agora que o fluxo todo está funcionar, activaremos o firewall para garantir que os acessos serão apenas a partir da porta **:80** para http e porta **:22** para conectar ao server usando SSH.
 
-````
+````bash
 sudo ufw limit 22/tcp
 sudo ufw allow http
 sudo ufw allow https
 sudo ufw enable
 ````
+
+
 
 ### Conclusão
 
