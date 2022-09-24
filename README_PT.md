@@ -49,8 +49,49 @@ Antes de iniciar com a criação dos containers, foi criada um rede bridge para 
 Executando `docker network ls`, será possível confirmar a existência da rede previamente criada.
 
 ### Criação e configuração do container SpringBoot
+Por questões de organização, criaremos pastas para organizar os ficheiros relacionados à cada container. O container associado ao springBoot será denominado `wit-test`, pelo que a pasta criada poderá também ter o mesmo nome.
+
+````
+cd
+mkdir wit-test
+cp wit-cicd-challenge.jar wit-test/
+````
+
+Criei também na pasta o ficheiro com o nome `Dockerfile` e copiei o seguinte conteúdo:
+
+````
+FROM openjdk:11
+COPY wit-test/wit-cicd-challenge.jar wit-cicd-challenge.jar
+ENTRYPOINT ["java", "-jar", "/wit-cicd-challenge.jar"]
+````
+
+Onde:
+- O `openjdk:11` é a imagem oficial criada pelo docker
+- Na segunda linha a instrução COPY especifica que deverá ser copiado o ficheiro .jar
+- Por fim, ENTRYPOINT especifica o comando a ser executado para o alojamento da aplicação quando for criado o conainer.
+
+De seguida, executei o seguinte comando para criar uma imagem do Docker para o projeto Spring Boot atual:
+
+`docker build -t wit-test wit-test`
+
+Nota que o primeiro primeiro parâmentro refere-se ao nome da imagem e o segundo à pasta onde deverá achar os ficheiros a serem usados para o build.
+
+Finda a execução do último comando, poderá visualizar as imagens em causa a partir do comando `docker images`
+
+Até então só existe a imagem que por sua vez está pronta para ser utilizada na criação do container. O seguinte comando criará o container, permitirá que esteja visível/acessível a partir de fora na porta 8080 e ainda garantirá que seja o serviço que iniciará com o sistema operativo:
+
+`docker run -d --restart unless-stopped -p 8080:8080 wit-test`
+
+É possível confirmar executando `docker ps` a existência do container e os respectivos detalhes.
 
 
+Neste momento já podemos visualizar o resultado a partir do exterior (navegador da nossa máquina host que está rodar a VM):
+
+`<ip-do-seu-servidor>:8080`
+
+O resultado deverá ser idêntico ao seguinte:
+
+![A test image](c1.png)
 
 ### Crianção e configuração do Proxy
 
