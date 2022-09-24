@@ -52,10 +52,10 @@ Executando `docker network ls`, será possível confirmar a existência da rede 
 Por questões de organização, criaremos pastas para organizar os ficheiros relacionados à cada container. O container associado ao springBoot será denominado *wit-test*, pelo que a pasta criada poderá também ter o mesmo nome.
 
 
-	cd
-	mkdir wit-test
-	cp wit-cicd-challenge.jar wit-test/
-	nano wit-test/Dockerfile
+`cd`
+`mkdir wit-test`
+`cp wit-cicd-challenge.jar wit-test/`
+`wit-test/Dockerfile`
 
 
 Criei também na pasta o ficheiro com o nome **Dockerfile** e copiei o seguinte conteúdo:
@@ -104,7 +104,7 @@ O resultado deverá ser idêntico ao seguinte:
 
 ### Configurações gerais do processo
 
-Agora que o fluxo todo está funcionar, activaremos o firewall para garantir que os acessos serão apenas a partir da porta :80 para http e porta :22 para conectar ao server usando SSH.
+Agora que o fluxo todo está funcionar, activaremos o firewall para garantir que os acessos serão apenas a partir da porta *:80* para http e porta *:22* para conectar ao server usando SSH.
 
 ````
 sudo ufw limit 22/tcp
