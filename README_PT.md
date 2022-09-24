@@ -49,7 +49,7 @@ Antes de iniciar com a criação dos containers, foi criada um rede bridge para 
 Executando `docker network ls`, será possível confirmar a existência da rede previamente criada.
 
 ### Criação e configuração do container SpringBoot
-Por questões de organização, criaremos pastas para organizar os ficheiros relacionados à cada container. O container associado ao springBoot será denominado `wit-test`, pelo que a pasta criada poderá também ter o mesmo nome.
+Por questões de organização, criaremos pastas para organizar os ficheiros relacionados à cada container. O container associado ao springBoot será denominado *wit-test*, pelo que a pasta criada poderá também ter o mesmo nome.
 
 
 	cd
@@ -88,7 +88,7 @@ Até então só existe a imagem que por sua vez está pronta para ser utilizada 
 
 Neste momento já podemos visualizar o resultado a partir do exterior (navegador da nossa máquina host que está rodar a VM):
 
-`<ip-do-seu-servidor>:8080`
+>> `<ip-do-seu-servidor>:8080`
 
 O resultado deverá ser idêntico ao seguinte:
 
