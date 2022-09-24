@@ -22,7 +22,6 @@
 
 ## Part II – Linux Laboratory
 
-![A test image](lb.png)
 
 ### Criação da Máquina virtual, instalação e configuração do Sistema Operativo
 
