@@ -25,15 +25,15 @@
 ### Criação da Máquina virtual, instalação e configuração do Sistema Operativo
 
 No meu caso, utilizei a versão 6.x do virtual box, de onde criei uma máquina virtual e instalei o SO conforme proposto.
-Garanti que todos pacotes estão actualizados, instalei o `net-tools` , o `openssh` e configurei Bridged Adapter como o tipo de rede para a VM em causa.
+Garanti que todos pacotes estão actualizados, instalei o *net-tools* , o *openssh* e configurei Bridged Adapter como o tipo de rede para a VM em causa.
 
 > **NOTA:** 
- *Aspectos ligados a segurança como o caso de alteração da porta default ssh, criação de utilizadores com privilégios limitados, login por par de chaves RSA, etc, não foram levados em consideração assumindo que não é o que está sendo avaliado. (Mas reconhecendo a necessidade).*
+>> *Aspectos ligados a segurança como o caso de alteração da porta default ssh, criação de utilizadores com privilégios limitados, login por par de chaves RSA, etc, não foram levados em consideração assumindo que não é o que está sendo avaliado. (Mas reconhecendo a necessidade).*
 
-A partir do comando `scp wit-cicd-challenge.jar wit@192.168.31.12:/home/wit/`, garanti que o ficheiro `.jar` fosse carregado da minha máquina (windows no meu caso) para a VM.
+A partir do comando `scp wit-cicd-challenge.jar wit@192.168.31.12:/home/wit/`, garanti que o ficheiro *.jar* fosse carregado da minha máquina (windows no meu caso) para a VM.
 
 
-### Processo de intalação do docker e garantir que irá executar sem o `sudo`
+### Processo de intalação do docker e garantir que irá executar sem o *sudo*
 
 
 
@@ -51,13 +51,14 @@ Executando `docker network ls`, será possível confirmar a existência da rede 
 ### Criação e configuração do container SpringBoot
 Por questões de organização, criaremos pastas para organizar os ficheiros relacionados à cada container. O container associado ao springBoot será denominado `wit-test`, pelo que a pasta criada poderá também ter o mesmo nome.
 
-````
-cd
-mkdir wit-test
-cp wit-cicd-challenge.jar wit-test/
-````
 
-Criei também na pasta o ficheiro com o nome `Dockerfile` e copiei o seguinte conteúdo:
+	cd
+	mkdir wit-test
+	cp wit-cicd-challenge.jar wit-test/
+	nano wit-test/Dockerfile
+
+
+Criei também na pasta o ficheiro com o nome **Dockerfile** e copiei o seguinte conteúdo:
 
 ````
 FROM openjdk:11
@@ -66,9 +67,9 @@ ENTRYPOINT ["java", "-jar", "/wit-cicd-challenge.jar"]
 ````
 
 Onde:
-- O `openjdk:11` é a imagem oficial criada pelo docker
-- Na segunda linha a instrução COPY especifica que deverá ser copiado o ficheiro .jar
-- Por fim, ENTRYPOINT especifica o comando a ser executado para o alojamento da aplicação quando for criado o conainer.
+- O **openjdk:11** é a imagem oficial criada pelo docker
+- Na segunda linha a instrução **COPY** especifica que deverá ser copiado o ficheiro .jar
+- Por fim, **ENTRYPOINT** especifica o comando a ser executado para o alojamento da aplicação quando for criado o conainer.
 
 De seguida, executei o seguinte comando para criar uma imagem do Docker para o projeto Spring Boot atual:
 
@@ -103,9 +104,16 @@ O resultado deverá ser idêntico ao seguinte:
 
 ### Configurações gerais do processo
 
+Agora que o fluxo todo está funcionar, activaremos o firewall para garantir que os acessos serão apenas a partir da porta :80 para http e porta :22 para conectar ao server usando SSH.
 
+````
+sudo ufw limit 22/tcp
+sudo ufw allow http
+sudo ufw allow https
+sudo ufw enable
+````
 
-
+### Conclusão
 
 
 
