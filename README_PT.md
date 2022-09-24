@@ -227,6 +227,9 @@ No ficheiro */etc/hosts*, deve associar o ip ao dns local que está sendo utiliz
 >Para testar esta configuração:
 >> `<ip-do-seu-servidor>:90` no browser, fora do server e mesma rede, e `curl demowit.local:90/wit-test/` dentro do server
 
+* (Aqui entram 
+	- imagens de demonstração,
+		* ambos cenários)
 
 ### Criação e configuração do LB
 
