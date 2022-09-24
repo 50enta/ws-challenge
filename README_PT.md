@@ -53,9 +53,12 @@ Por questões de organização, criaremos pastas para organizar os ficheiros rel
 
 
 `cd`
+
 `mkdir wit-test`
+
 `cp wit-cicd-challenge.jar wit-test/`
-`wit-test/Dockerfile`
+
+`nano wit-test/Dockerfile`
 
 
 Criei também na pasta o ficheiro com o nome **Dockerfile** e copiei o seguinte conteúdo:
