@@ -33,9 +33,27 @@ Garanti que todos pacotes estão actualizados, instalei o `net-tools` , o `opens
 A partir do comando `scp wit-cicd-challenge.jar wit@192.168.31.12:/home/wit/`, garanti que o ficheiro `.jar` fosse carregado da minha máquina (windows no meu caso) para a VM.
 
 
-### Processo de intalação do docker
+### Processo de intalação do docker e garantir que irá executar sem o `sudo`
 
 
+
+### Arquitetura e descrição da proposta
+
+
+
+### Criação e configuração do container SpringBoot
+
+
+
+### Crianção e configuração do Proxy
+
+
+
+### Criação e configuração do LB
+
+
+
+### Configurações gerais do processo
 
 
 
