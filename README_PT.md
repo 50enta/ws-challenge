@@ -10,11 +10,9 @@
 2.  
 
 
-   1.  
+2.1. Tudo indica que o servidor tomcat está down. Minha primeira acção seria fazer o backup da base de dados da aplicação em causa e de seguida fazer o start do serviço tomcat para visualizar os logs, caso não inicialize.
 
-      - Tudo indica que o servidor tomcat está down. Minha primeira acção seria fazer o backup da base de dados da aplicação em causa e de seguida fazer o start do serviço tomcat para visualizar os logs, caso não inicialize.
-
-      - Os seguintes podem ser os possíveis problemas:
+   - Os seguintes podem ser os possíveis problemas:
 
         - **Tomcat Stoped**: 
         - **Tomcat Server Sobrecarregado:**
@@ -22,7 +20,7 @@
 
         
 
-   2. 
+2.2.  
 
 3. 
 
