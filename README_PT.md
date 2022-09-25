@@ -1,24 +1,31 @@
 ## Part I – Answers for Debug Systems Issues
 
-1. Tudo indica que estamos perante uma impossibilidade de conectar com o serviço/servidor de base de dados, pelo que minha primeira atitude perante esta situação seria veririfcar se a base de dados está disponível ou não. E caso esteja indisponível, torná-lo disponível.
+1. Aparentemente existe uma dificuldade em conectar com o serviço/servidor de BD. De forma a resolver isso optaria em seguir os passos abaixo:
 
+   * Realizar o Backup da base de dados;
+   * Verificar a disponibilidade do serviço/servidor da BD;
+   * Caso o anterior não se cumpra, disponibilizar  o serviço da DB;
 
+   
 
 
 2.  Considerando a infraestrutura e o erro apresentado:
 
 
-* **(2.1.)** Tudo indica que o servidor tomcat está down. Minha primeira acção seria fazer o backup da base de dados da aplicação em causa e de seguida fazer o start do serviço tomcat para visualizar os logs, caso não inicialize.
+* **(2.1.)** Tudo indica que o serviço tomcat está down. Minha primeira acção seria fazer o backup da base de dados da aplicação em causa e de seguida fazer o `start` do serviço tomcat para visualizar os logs, caso não inicialize.
 
 
 * **(2.2.)** Os seguintes podem ser os possíveis problemas:
 
-   - **Tomcat Stoped**: 
-   - **Tomcat Server Sobrecarregado:**
-   - **Bloqueio da porta de escuta, do container/serviço tomcat:**
-   - **Limpeza de cachê no _client-side_**
+   - **Tomcat Stoped**: Solução seria o start da do serviço.
 
-    
+   - **Tomcat Server Sobrecarregado:** reiniciar do serviço e instalar na infraestrutura uma ferramenta para monitorização (ex: _munin_) para identificar a real causa nas próximas vezes.
+
+   - **Problemas de conexão entre o Reverse Proxy e o Tomcat:** veririfcar o ficheiro `.conf` se foi configurado correctamente.
+
+   - **Bloqueio da porta de escuta, do container/serviço tomcat:** habilitar a porta por onde o serviço é executado.
+
+      
 
 3. 
 
@@ -37,7 +44,7 @@
 
 ### Máquina virtual e  Sistema Operativo
 
-No meu caso, utilizei a versão 6.x do virtual box, de onde criei uma máquina virtual e instalei o SO conforme proposto.
+Utilizei a versão 6.x do virtualBox, de onde criei uma máquina virtual e instalei o SO conforme proposto.
 Garanti que todos pacotes estão atualizados, instalei o *net-tools* , o *openssh* e configurei _Bridged Adapter_ como o tipo de rede para a VM em causa.
 
 
@@ -54,7 +61,7 @@ A partir do comando:
 scp wit-cicd-challenge.jar wit@192.168.31.12:/home/wit/
 ````
 
- garanti que o ficheiro **.jar** fosse carregado da minha máquina (windows no meu caso) para a VM.
+ garanti que o ficheiro **.jar** fosse carregado da minha máquina (windows 11) para a VM.
 
 
 
@@ -90,27 +97,27 @@ Agora que temos o utilizador wit criado e com os privilégios necessários para 
 sudo snapd install docker
 ````
 
-Para que seja possível executar o docker sem o sudo, precisamos criar um grupo e associar o utilizador por  forma a ter os privilégios necessários.
+Para que fosse possível executar o docker sem o sudo, foi necessário criar um grupo e associar o utilizador por  forma a ter os privilégios necessários.
 
 ```bash
 sudo groupadd docker
 ```
 
-Agora, adicionando o utilizador em causa:
+De seguida, adicionando o utilizador em causa, executando:
 
 ```bash
  sudo gpasswd -a $USER docker
 ```
 
-Agora, testando poderemos notar que a configuração foi bem sucedida.
+Testando notou-se que a configuração foi bem sucedida.
 
 
 
 ### Arquitetura e descrição da proposta
 
-A figura apresentada abaixo ilustra o cenário que foi configurado mediante à solicitação do enunciado.
+A figura apresentada abaixo ilustra o cenário que configurei, mediante à solicitação do enunciado.
 
-Concretamente, trata-se de uma rede de containers conectados entre eles por forma a enviar solicitações e respostas às mesmas.
+Concretamente, trata-se de uma rede de containers conectados entre eles por forma a enviar solicitações e respostas entre as mesmas.
 
 São três (3) containers:
 
@@ -133,18 +140,18 @@ As seguintes tecnologias foram escolhidas/utilizadas:
 
 ### Criação e configuração da rede
 
-Antes de iniciar com a criação dos containers, foi criada um rede bridge para conectarmos posterior conectar todos os containers que forem criados. O seguinte comando foi utilizado para criar a rede com o nome redewit
+Antes de iniciar com a criação dos containers, criei uma rede bridge para posteriormente conectar todos os containers que forem criados. O seguinte comando foi utilizado para criar a rede com o nome **redewit**:
 
 ````bash
 docker network create --driver=bridge redewit
 ````
 
-Executando `docker network ls`, será possível confirmar a existência da rede previamente criada.
+Executando `docker network ls`, foi possível confirmar a existência da rede previamente criada.
 
 
 
 ### Criação e configuração do container SpringBoot
-Por questões de organização, criaremos pastas para organizar os ficheiros relacionados à cada container. O container associado ao springBoot será denominado *wit-test*, pelo que a pasta criada poderá também ter o mesmo nome.
+Por questões de organização, criei pastas para organizar os ficheiros relacionados à cada container. O container associado ao SpringBoot será denominado *wit-test*, pelo que a pasta criada também tem o mesmo nome.
 
 ````
 cd ~
@@ -188,9 +195,9 @@ docker build -t wit-test wit-test/
 
 Nota que o primeiro primeiro parâmentro refere-se ao nome da imagem e o segundo à pasta onde deverá achar os ficheiros a serem usados para o build.
 
-Finda a execução do último comando, poderá visualizar as imagens em causa a partir do comando `docker images`
+Finda a execução do último comando, é possível visualizar as imagens em causa a partir do comando `docker images`
 
-Até então só existe a imagem que por sua vez está pronta para ser utilizada na criação do container. O seguinte comando criará o container, permitirá que esteja visível/acessível a partir de fora na porta 8080 e ainda garantirá que seja o serviço que iniciará com o sistema operativo:
+Até então existe apenas a imagem que por sua vez está pronta para ser utilizada na criação do container. O seguinte comando criará o container, permitirá que esteja visível/acessível a partir de fora na porta **:8080** e ainda garantirá que seja o serviço que iniciará com o sistema operativo:
 
 ````shell
 docker run -d --restart unless-stopped -p 8080:8080 --net redewit --name wit-test wit-test
@@ -211,11 +218,9 @@ O resultado deverá ser idêntico ao seguinte:
 
 ### Criação e configuração do Reverse Proxy
 
-Agora que configuramos o container da aplicação, partiremos para a configuração do reverse proxy que por sua vez fará o forward do tráfego para a aplicação.
+Agora que configurei o container da aplicação, partirei para a configuração do reverse proxy que por sua vez fará o forward do tráfego para a aplicação.
 
-Antes de tudo, utilizei o comando `docker pull httpd:latest` para puxar a imagem da última versão do httpd
-
-Na pasta proxy, criamos o directório **proxy** para conter o ficheiro **Dockerfile**
+Antes de tudo, utilizei o comando `docker pull httpd:latest` para puxar a imagem da última versão do httpd. Na pasta proxy, criei o directório **proxy** para conter o ficheiro **Dockerfile**  e outros relacionados.
 
 ````bash
 mkdir proxy
@@ -253,7 +258,7 @@ docker build -t proxy proxy/
 
 e o mesmo é denominado *proxy* e pode ser confirmado executando `docker images`
 
-Segue a criação do workspace que será usado para o *mount* no container e irá conter alguns ficheiros de configuração. São 2 directórios, onde o primeiro armazena os ficheiros *.conf* e o segundo os ficheiros *html*
+Segue a criação do workspace que será usado para o *mount* no container e irá conter alguns ficheiros de configuração. São 2 directórios, onde o primeiro armazena os ficheiros `.conf` e o segundo os ficheiros `.html`.
 
 ````bash
 mkdir -p /home/wit/apps/docker/apacheconf/sites
@@ -263,13 +268,13 @@ mkdir -p /home/wit/apps/docker/apacheconf/sites
 mkdir -p /home/wit/apps/docker/apacheconf/htmlfiles
 ````
 
-Agora a criação do ficheiro *.conf* denominado *demowit* para conter o conteúdo a seguir:
+Agora a criação do ficheiro *.conf* denominado *demowit.conf*
 
 ````bash
 nano /home/wit/apps/docker/apacheconf/sites/demowit.conf
 ````
 
-O conteúdo:
+para conter o conteúdo a seguir:
 
 ````dockerfile
  <VirtualHost *:80>
@@ -287,34 +292,16 @@ O conteúdo:
 		Require all granted
 	</Directory>
 
-    #Load the SSL module that is needed to terminate SSL on Apache
-#    LoadModule ssl_module modules/mod_ssl.so
-
-    #This directive toggles the usage of the SSL/TLS Protocol Engine for proxy. 
-    #Without this you cannot use HTTPS URL as your Origin Server
-#    SSLProxyEngine on
-
-    # To prevent SSL Offloading
-    # Set the X-Forwarded-Proto to be https for your Origin Server to understand that this request is made over HTTPS 
-
-#    RequestHeader set X-Forwarded-Proto “https”
-#    RequestHeader set X-Forwarded-Port “443”	
-
     ErrorLog logs/demowit-error.log
     CustomLog logs/demowit-access.log combined
 
-    # The ProxyPass directive specifies the mapping of incoming requests to the backend server (or a cluster of servers known as a Balancer group).
-    # It proxies the requests only with matching URI “/blog”
-
-    #To ensure that and Location: headers generated from the backend are modified to point to the reverse proxy, instead of back to itself, #the ProxyPassReverse directive is most often required:
-
-    ProxyPass /wit-test http://wit-test:8080/
-    ProxyPassReverse /wit-test http://wit-test:8080/
+    ProxyPass / http://wit-test:8080/
+    ProxyPassReverse / http://wit-test:8080/
 	
 </VirtualHost>
 ````
 
-Agora a criação do ficheiro html que servirá para landing page
+Agora a criação do ficheiro html que servirá para landing page:
 
 ````bash
 nano /home/wit/apps/docker/apacheconf/htmlfiles/index.html
@@ -328,12 +315,12 @@ O conteúdo
 		<title>demowit</title>
 	</head>
 	<body>
-		<h2> It's working... </h2>
+		<h2> Funcionando Perfeitamente... </h2>
 	</body>
 </html>
 ````
 
-A última configuração para esta etapa é a criação do container, associado à publicação da porta e o mount dos directórios/ficheiros a serem utilizados no container.
+A última configuração para esta etapa é a criação do container, associado à publicação da porta e o _mount_ dos directórios/ficheiros a serem utilizados no container.
 
 ````bash
 docker container run --publish 90:80 -d --restart unless-stopped --name proxy --net redewit -v /home/wit/apps/docker/apacheconf/sites:/usr/local/apache2/conf/sites -v /home/wit/apps/docker/apacheconf/htmlfiles:/usr/local/apache2/demowit proxy
@@ -341,7 +328,7 @@ docker container run --publish 90:80 -d --restart unless-stopped --name proxy --
 
 Lembrando que configurei a porta 90 para o reverse proxy.
 
-No ficheiro */etc/hosts* da máquina host, deve associar o ip ao dns local que está sendo utilizado nos ficheiros de configuração:
+No ficheiro */etc/hosts* da máquina host, deve se associar o IP ao DNS local que está sendo utilizado nos ficheiros de configuração:
 
 `````bash
 > 127.0.0.1			demowit.local
@@ -349,20 +336,15 @@ No ficheiro */etc/hosts* da máquina host, deve associar o ip ao dns local que e
 
 
 
->Para testar esta configuração:
->> `<ip-do-seu-servidor>:90` no browser, fora do server e mesma rede, e `curl demowit.local:90/wit-test/` dentro do server
+>**Para testar esta configuração:**
+>
+>> `<ip-do-seu-servidor>:90` no browser, fora do server e mesma rede, e `curl demowit.local:90/` dentro do server
 
 
 
-Na rota **/wit-test** está correr a aplicação que configuramos anteriormente, a partir do proxy:
+Na rota **/** está correr a aplicação que configuramos anteriormente, a partir do proxy:
 
 ![A test image](proxy1.png)
-
-Já na rota root, está a ser executado o landing page que configuramos:
-
-![Proxy landing page](proxy2.png)
-
-
 
 > Até então configuramos o proxy, o intermediário entre o LB Server e a Aplicação SpringBoot.
 
