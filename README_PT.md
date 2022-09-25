@@ -352,13 +352,79 @@ Na rota **/** está correr a aplicação que configuramos anteriormente, a parti
 
 ### Criação e configuração do LB
 
+Utizei HAproxy como o Load Balancer. Primeiro passo foi criar o ficheiro de configuração, para configurar o funcionamento do container:
 
+````bash
+nano haproxy.cfg
+````
+
+no ficheiro, foi incluso o seguinte código:
+
+````bash
+global
+  stats socket /var/run/api.sock user haproxy group haproxy mode 660 level admin expose-fd listeners
+  log stdout format raw local0 info
+
+defaults
+  mode http
+  timeout client 10s
+  timeout connect 5s
+  timeout server 10s
+  timeout http-request 10s
+  log global
+
+frontend stats
+  bind *:8404
+  stats enable
+  stats uri /
+  stats refresh 10s
+
+frontend myfrontend
+  bind :90
+  default_backend webservers
+
+backend webservers
+  server s1 proxy:80 check
+````
+
+o container LB servirá na porta **:90** e o tráfego da porta **:80** do da máquina host será redireccionada para a porta **:90** do container do LB.
+
+Estará também disponível o dahsboard do HAproxy na porta **:8404**, para a gestão.
+
+Estando no directório onde criamos o ficheiro de configuração, executamos o seguinte comando, para criar o container, configurar a regra das portas e o mount do volume do cheiro utilizado.
+
+````bash
+sudo docker run -d \
+   --name haproxy \
+   --net redewit \
+   -v $(pwd):/usr/local/etc/haproxy:ro \
+   -p 80:90 \
+   -p 8404:8404 \
+   --restart unless-stopped \
+   haproxytech/haproxy-alpine:2.4
+````
+
+Feito isto, a configuração foi concluída com sucesso, pelo que pode ser testado.
+
+
+
+> **Para testar esta configuração:**
+>
+> > `<ip-do-seu-servidor>` no browser, fora do server e mesma rede, e `curl demowit.local` dentro do server
+
+Na rota **/** , da porta **:80** está correr a aplicação que configuramos anteriormente, a partir do proxy:
+
+![A test image](lb1.png)
+
+Na rota **/** da porta **:8404**, retorna o dashboard do haproxy:
+
+![A test image](lb-dash.png)
 
 
 
 ### Configurações gerais do processo
 
-Agora que o fluxo todo está funcionar, activaremos o firewall para garantir que os acessos serão apenas a partir da porta **:80** para http e porta **:22** para conectar ao server usando SSH.
+Tendo o fluxo todo está funcionar, activei o firewall para garantir que os acessos serão apenas a partir da porta **:80**,  **:443**,  **:8404** para http e porta **:22** para  SSH.
 
 ````bash
 sudo ufw limit 22/tcp
@@ -373,6 +439,10 @@ sudo ufw allow https
 ````
 
 ````bash
+sudo ufw limit 8404/tcp
+````
+
+````bash
 sudo ufw enable
 ````
 
@@ -380,7 +450,9 @@ sudo ufw enable
 
 ### Conclusão
 
+Os containers criados, conforme proposto:
 
+![A test image](rf.png)
 
 
 
