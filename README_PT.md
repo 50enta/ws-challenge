@@ -20,7 +20,7 @@
    - **Bloqueio da porta de escuta, do container/serviço tomcat:**
    - **Limpeza de cachê no _client-side_**
 
-     
+    
 
 3. 
 
@@ -33,20 +33,30 @@
 
 ## Part II – Linux Laboratory
 
+>
+
+
 
 ### Máquina virtual e  Sistema Operativo
 
 No meu caso, utilizei a versão 6.x do virtual box, de onde criei uma máquina virtual e instalei o SO conforme proposto.
-Garanti que todos pacotes estão actualizados, instalei o *net-tools* , o *openssh* e configurei Bridged Adapter como o tipo de rede para a VM em causa.
+Garanti que todos pacotes estão atualizados, instalei o *net-tools* , o *openssh* e configurei _Bridged Adapter_ como o tipo de rede para a VM em causa.
 
 
 
 > **NOTA:** 
+>
 > > *Aspectos ligados a segurança como o caso de alteração da porta default ssh, criação de utilizadores com privilégios limitados, login por par de chaves RSA, etc, não foram levados em consideração assumindo que não é o que está sendo avaliado. (Mas reconhecendo a necessidade).*
 
 
 
-A partir do comando `scp wit-cicd-challenge.jar wit@192.168.31.12:/home/wit/`, garanti que o ficheiro **.jar** fosse carregado da minha máquina (windows no meu caso) para a VM.
+A partir do comando:
+
+````
+scp wit-cicd-challenge.jar wit@192.168.31.12:/home/wit/
+````
+
+ garanti que o ficheiro **.jar** fosse carregado da minha máquina (windows no meu caso) para a VM.
 
 
 
@@ -75,6 +85,12 @@ Agora que temos o utilizador wit criado e com os privilégios necessários para 
 ###  Instalação do docker
 
 > _Instruções disponibilizadas no enunciado_ , no link: <https://docs.docker.com/engine/install/centos/>
+
+
+
+````bash
+sudo snapd install docker
+````
 
 
 
