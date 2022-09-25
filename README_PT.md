@@ -343,17 +343,18 @@ docker container run --publish 90:80 -d --restart unless-stopped --name proxy --
 
 Lembrando que configurei a porta 90 para o reverse proxy.
 
+No ficheiro */etc/hosts* da máquina host, deve associar o ip ao dns local que está sendo utilizado nos ficheiros de configuração:
 
-No ficheiro */etc/hosts*, deve associar o ip ao dns local que está sendo utilizado nos ficheiros:
+`````bash
+> 127.0.0.1			demowit.local
+`````
 
-* 127.0.0.1			demowit.local
+
 
 >Para testar esta configuração:
 >> `<ip-do-seu-servidor>:90` no browser, fora do server e mesma rede, e `curl demowit.local:90/wit-test/` dentro do server
 
-* (Aqui entram 
-	- imagens de demonstração,
-		* ambos cenários)
+
 
 Na rota **/wit-test** está correr a aplicação que configuramos anteriormente, a partir do proxy:
 
@@ -362,6 +363,10 @@ Na rota **/wit-test** está correr a aplicação que configuramos anteriormente,
 Já na rota root, está a ser executado o landing page que configuramos:
 
 ![Proxy landing page](proxy2.png)
+
+
+
+> Até então configuramos o proxy, o intermediário entre o LB Server e a Aplicação SpringBoot.
 
 
 
