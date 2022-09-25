@@ -92,6 +92,20 @@ Agora que temos o utilizador wit criado e com os privilégios necessários para 
 sudo snapd install docker
 ````
 
+Para que seja possível executar o docker sem o sudo, precisamos criar um grupo e associar o utilizador por  forma a ter os privilégios necessários.
+
+```bash
+sudo groupadd docker
+```
+
+Agora, adicionando o utilizador em causa:
+
+```bash
+ sudo gpasswd -a $USER docker
+```
+
+Agora, testando poderemos notar que a configuração foi bem sucedida.
+
 
 
 ### Arquitetura e descrição da proposta
