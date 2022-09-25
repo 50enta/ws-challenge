@@ -40,6 +40,8 @@ A partir do comando `scp wit-cicd-challenge.jar wit@192.168.31.12:/home/wit/`, g
 
 > _Instruções disponibilizadas no enunciado_ , no link: <https://docs.docker.com/engine/install/centos/>
 
+
+
 ### Arquitetura e descrição da proposta
 
 A figura apresentada abaixo ilustra o cenário que foi configurado mediante à solicitação do enunciado.
@@ -57,15 +59,15 @@ São três (3) containers:
 As seguintes tecnologias foram escolhidas/utilizadas:
 
 |                 | Tecnologia  | Comentários                                                  |
-| --------------- | ----------- | ------------------------------------------------------------ |
+| :-------------- | ----------- | ------------------------------------------------------------ |
 | _Containers_    | **Docker**  |                                                              |
-| _Load Balancer_ | **HAproxy** |                                                              |
+| _Load Balancer_ | **HAproxy** | Primeira camada, no contacto com o exterior                  |
 | _Reverse Proxy_ | **Apache**  |                                                              |
 | Firewall        | **UFW**     | Para garantir que apenas o LB seja acedido a partir do exterior, sendo que os demais serão acedidios a partir do outros containers ou _host_ |
 
 
 
-- [ ] ### Criação e configuração da rede
+### Criação e configuração da rede
 
 Antes de iniciar com a criação dos containers, foi criada um rede bridge para conectarmos posterior conectar todos os containers que forem criados. O seguinte comando foi utilizado para criar a rede com o nome redewit
 
@@ -77,8 +79,7 @@ Executando `docker network ls`, será possível confirmar a existência da rede 
 
 
 
-- [ ] ### Criação e configuração do container SpringBoot
-
+### Criação e configuração do container SpringBoot
 Por questões de organização, criaremos pastas para organizar os ficheiros relacionados à cada container. O container associado ao springBoot será denominado *wit-test*, pelo que a pasta criada poderá também ter o mesmo nome.
 
 ````
@@ -144,7 +145,7 @@ O resultado deverá ser idêntico ao seguinte:
 
 
 
-- [x] ### Crianção e configuração do Reverse Proxy
+### Crianção e configuração do Reverse Proxy
 
 Agora que configuramos o container da aplicação, partiremos para a configuração do reverse proxy que por sua vez fará o forward do tráfego para a aplicação.
 
@@ -183,16 +184,21 @@ Ainda na pasta criada **proxy**, criei o ficheiro de configuração``nano httpd.
 
 O Build e criação da imagem a partir do ficheiro **proxy/Dockerfile** será realizado após executar o comando `docker build -t proxy proxy/` e o mesmo é denominado *proxy* e pode ser confirmado executando `docker images`
 
-
 Segue a criação do workspace que será usado para o *mount* no container e irá conter alguns ficheiros de configuração. São 2 directórios, onde o primeiro armazena os ficheiros *.conf* e o segundo os ficheiros *html*
 
-`mkdir -p /home/wit/apps/docker/apacheconf/sites`
+````bash
+mkdir -p /home/wit/apps/docker/apacheconf/sites
+````
 
-`mkdir -p /home/wit/apps/docker/apacheconf/htmlfiles`
+````bash
+mkdir -p /home/wit/apps/docker/apacheconf/htmlfiles
+````
 
 Agora a criação do ficheiro *.conf* denominado *demowit* para conter o conteúdo a seguir:
 
-`nano /home/wit/apps/docker/apacheconf/sites/demowit.conf`
+````bash
+nano /home/wit/apps/docker/apacheconf/sites/demowit.conf
+````
 
 O conteúdo:
 
@@ -287,6 +293,8 @@ No ficheiro */etc/hosts*, deve associar o ip ao dns local que está sendo utiliz
 
 
 ### Criação e configuração do LB
+
+
 
 
 
