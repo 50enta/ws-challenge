@@ -1,5 +1,3 @@
-
-
 ## Part I – Answers for Debug Systems Issues
 
 1. Tudo indica que estamos perante uma impossibilidade de conectar com o serviço/servidor de base de dados, pelo que minha primeira atitude perante esta situação seria veririfcar se a base de dados está disponível ou não. E caso esteja indisponível, torná-lo disponível.
