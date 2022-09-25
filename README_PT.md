@@ -7,22 +7,24 @@
 
 
 
-2.  
+2.  Considerando a infraestrutura e o erro apresentado:
 
 
-* (2.1.) Tudo indica que o servidor tomcat está down. Minha primeira acção seria fazer o backup da base de dados da aplicação em causa e de seguida fazer o start do serviço tomcat para visualizar os logs, caso não inicialize.
+* **(2.1.)** Tudo indica que o servidor tomcat está down. Minha primeira acção seria fazer o backup da base de dados da aplicação em causa e de seguida fazer o start do serviço tomcat para visualizar os logs, caso não inicialize.
 
-   - Os seguintes podem ser os possíveis problemas:
 
-        - **Tomcat Stoped**: 
-        - **Tomcat Server Sobrecarregado:**
-        - **Bloqueio da porta de escuta, do container/serviço tomcat:**
+* **(2.2.)** Os seguintes podem ser os possíveis problemas:
 
-* (2.2.)        
+   - **Tomcat Stoped**: 
+   - **Tomcat Server Sobrecarregado:**
+   - **Bloqueio da porta de escuta, do container/serviço tomcat:**
+   - **Limpeza de cachê no _client-side_**
 
-2.2.  
+     
 
 3. 
+
+
 
 
 4. 
@@ -50,9 +52,27 @@ A partir do comando `scp wit-cicd-challenge.jar wit@192.168.31.12:/home/wit/`, g
 
 ### Criação do utilizador
 
+Os seguintes comandos foram executados para a criação de utilizador wit e adicioná-lo ao grupo sudo:
+
+```bash
+sudo adduser wit
+```
+
+```bash
+sudo usermod -aG sudo wit
+```
+
+Para testar o seu funcionamento:
+
+```
+su wit
+```
+
+Agora que temos o utilizador wit criado e com os privilégios necessários para avançar.
 
 
-###  Intalação do docker
+
+###  Instalação do docker
 
 > _Instruções disponibilizadas no enunciado_ , no link: <https://docs.docker.com/engine/install/centos/>
 
@@ -66,8 +86,8 @@ Concretamente, trata-se de uma rede de containers conectados entre eles por form
 
 São três (3) containers:
 
-- O primeiro para o Load Balancer,
-- O segundo para o Reverse Proxy, e 
+- O primeiro para o _Load Balancer_,
+- O segundo para o _Reverse Proxy_, e 
 - O terceiro para a aplicação disponibilizada.
 
 ![A test image](sp.png)
@@ -161,7 +181,7 @@ O resultado deverá ser idêntico ao seguinte:
 
 
 
-### Crianção e configuração do Reverse Proxy
+### Criação e configuração do Reverse Proxy
 
 Agora que configuramos o container da aplicação, partiremos para a configuração do reverse proxy que por sua vez fará o forward do tráfego para a aplicação.
 
@@ -224,7 +244,7 @@ O conteúdo:
 	ServerName demowit.local
 	ServerAlias www.demowit.local
 
-	ServerAdmin demo@exemplo.com
+	ServerAdmin exemplo@demowit.local
 	DocumentRoot /usr/local/apache2/demowit
 	
 	<Directory "/usr/local/apache2/demowit">
@@ -263,7 +283,7 @@ O conteúdo:
 
 Agora a criação do ficheiro html que servirá para landing page
 
-````
+````bash
 nano /home/wit/apps/docker/apacheconf/htmlfiles/index.html
 ````
 
@@ -320,8 +340,17 @@ Agora que o fluxo todo está funcionar, activaremos o firewall para garantir que
 
 ````bash
 sudo ufw limit 22/tcp
+````
+
+````bash
 sudo ufw allow http
+````
+
+````bash
 sudo ufw allow https
+````
+
+````bash
 sudo ufw enable
 ````
 
