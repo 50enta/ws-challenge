@@ -5,14 +5,10 @@
 1. 
 
 
-2. 
-3. 
+2.  
 
-
-* 2.1) 
-
-* 2.2)  
-
+   1.  
+   2. 
 
 3. 
 
@@ -24,7 +20,7 @@
 ## Part II – Linux Laboratory
 
 
-### Criação da Máquina virtual, instalação e configuração do Sistema Operativo
+### Máquina virtual e  Sistema Operativo
 
 No meu caso, utilizei a versão 6.x do virtual box, de onde criei uma máquina virtual e instalei o SO conforme proposto.
 Garanti que todos pacotes estão actualizados, instalei o *net-tools* , o *openssh* e configurei Bridged Adapter como o tipo de rede para a VM em causa.
@@ -35,24 +31,54 @@ Garanti que todos pacotes estão actualizados, instalei o *net-tools* , o *opens
 A partir do comando `scp wit-cicd-challenge.jar wit@192.168.31.12:/home/wit/`, garanti que o ficheiro *.jar* fosse carregado da minha máquina (windows no meu caso) para a VM.
 
 
-### Intalação do docker e garantir que irá executar sem o *sudo*
+
+### Criação do utilizador
 
 
+
+###  Intalação do docker
+
+> _Instruções disponibilizadas no enunciado_ , no link: <https://docs.docker.com/engine/install/centos/>
 
 ### Arquitetura e descrição da proposta
 
+A figura apresentada abaixo ilustra o cenário que foi configurado mediante à solicitação do enunciado.
+
+Concretamente, trata-se de uma rede de containers conectados entre eles por forma a enviar solicitações e respostas às mesmas.
+
+São três (3) containers:
+
+- O primeiro para o Load Balancer,
+- O segundo para o Reverse Proxy, e 
+- O terceiro para a aplicação disponibilizada.
+
 ![A test image](sp.png)
 
+As seguintes tecnologias foram escolhidas/utilizadas:
 
-### Criação e configuração da rede
+|                 | Tecnologia  | Comentários                                                  |
+| --------------- | ----------- | ------------------------------------------------------------ |
+| _Containers_    | **Docker**  |                                                              |
+| _Load Balancer_ | **HAproxy** |                                                              |
+| _Reverse Proxy_ | **Apache**  |                                                              |
+| Firewall        | **UFW**     | Para garantir que apenas o LB seja acedido a partir do exterior, sendo que os demais serão acedidios a partir do outros containers ou _host_ |
+
+
+
+- [ ] ### Criação e configuração da rede
 
 Antes de iniciar com a criação dos containers, foi criada um rede bridge para conectarmos posterior conectar todos os containers que forem criados. O seguinte comando foi utilizado para criar a rede com o nome redewit
 
-`docker network create --driver=bridge redewit`
+````bash
+docker network create --driver=bridge redewit
+````
 
 Executando `docker network ls`, será possível confirmar a existência da rede previamente criada.
 
-### Criação e configuração do container SpringBoot
+
+
+- [ ] ### Criação e configuração do container SpringBoot
+
 Por questões de organização, criaremos pastas para organizar os ficheiros relacionados à cada container. O container associado ao springBoot será denominado *wit-test*, pelo que a pasta criada poderá também ter o mesmo nome.
 
 ````
@@ -80,10 +106,14 @@ COPY wit-test/wit-cicd-challenge.jar wit-cicd-challenge.jar
 ENTRYPOINT ["java", "-jar", "/wit-cicd-challenge.jar"]
 ````
 
-Onde:
-- O **openjdk:11** é a imagem oficial criada pelo docker
-- Na segunda linha a instrução **COPY** especifica que deverá ser copiado o ficheiro .jar
-- Por fim, **ENTRYPOINT** especifica o comando a ser executado para o alojamento da aplicação quando for criado o conainer.
+- Onde:
+
+  - O **openjdk:11** é a imagem oficial criada pelo docker
+
+  - Na segunda linha a instrução **COPY** especifica que deverá ser copiado o ficheiro .jar
+
+  - Por fim, **ENTRYPOINT** especifica o comando a ser executado para o alojamento da aplicação quando for criado o conainer.
+
 
 De seguida, executei o seguinte comando para criar uma imagem do Docker para o projeto Spring Boot atual:
 
@@ -113,7 +143,9 @@ O resultado deverá ser idêntico ao seguinte:
 ![A test image](c1.png)
 
 
-### Crianção e configuração do Reverse Proxy
+
+- [x] ### Crianção e configuração do Reverse Proxy
+
 Agora que configuramos o container da aplicação, partiremos para a configuração do reverse proxy que por sua vez fará o forward do tráfego para a aplicação.
 
 Antes de tudo, utilizei o comando `docker pull httpd:latest` para puxar a imagem da última versão do httpd.
@@ -209,7 +241,9 @@ O conteúdo:
 
 Agora a criação do ficheiro html que servirá para landing page
 
-`nano /home/wit/apps/docker/apacheconf/htmlfiles/index.html`
+````
+nano /home/wit/apps/docker/apacheconf/htmlfiles/index.html
+````
 
 O conteúdo
 
@@ -226,7 +260,7 @@ O conteúdo
 
 A última configuração para esta etapa é a criação do container, associado à publicação da porta e o mount dos directórios/ficheiros a serem utilizados no container.
 
-``
+````bash
 docker container run
 --publish 90:90 
 -d --restart unless-stopped 
@@ -234,7 +268,7 @@ docker container run
 -v /home/wit/apps/docker/apacheconf/sites:/usr/local/apache2/conf/sites
 -v /home/wit/apps/docker/apacheconf/htmlfiles:/usr/local/apache2/demowit
 proxy
-``
+````
 
 Lembrando que configurei a porta 90 para o reverse proxy.
 
