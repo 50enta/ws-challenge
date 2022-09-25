@@ -55,14 +55,21 @@ Executando `docker network ls`, será possível confirmar a existência da rede 
 ### Criação e configuração do container SpringBoot
 Por questões de organização, criaremos pastas para organizar os ficheiros relacionados à cada container. O container associado ao springBoot será denominado *wit-test*, pelo que a pasta criada poderá também ter o mesmo nome.
 
+````
+cd ~
+````
 
-`cd ~`
+````shell
+mkdir wit-test
+````
 
-`mkdir wit-test`
+````bash
+cp wit-cicd-challenge.jar wit-test/
+````
 
-`cp wit-cicd-challenge.jar wit-test/`
-
-`nano wit-test/Dockerfile`
+````bash
+nano wit-test/Dockerfile
+````
 
 
 Criei também na pasta o ficheiro com o nome **Dockerfile** e copiei o seguinte conteúdo:
@@ -80,7 +87,9 @@ Onde:
 
 De seguida, executei o seguinte comando para criar uma imagem do Docker para o projeto Spring Boot atual:
 
-`docker build -t wit-test wit-test/`
+````bash
+docker build -t wit-test wit-test/
+````
 
 Nota que o primeiro primeiro parâmentro refere-se ao nome da imagem e o segundo à pasta onde deverá achar os ficheiros a serem usados para o build.
 
@@ -88,7 +97,9 @@ Finda a execução do último comando, poderá visualizar as imagens em causa a 
 
 Até então só existe a imagem que por sua vez está pronta para ser utilizada na criação do container. O seguinte comando criará o container, permitirá que esteja visível/acessível a partir de fora na porta 8080 e ainda garantirá que seja o serviço que iniciará com o sistema operativo:
 
-`docker run -d --restart unless-stopped -p 8080:8080 --net redewit --name wit-test`
+````shell
+docker run -d --restart unless-stopped -p 8080:8080 --net redewit --name wit-test
+````
 
 É possível confirmar executando `docker ps` a existência do container e os respectivos detalhes.
 
@@ -109,9 +120,13 @@ Antes de tudo, utilizei o comando `docker pull httpd:latest` para puxar a imagem
 
 Na pasta proxy, criamos o directório **proxy** para conter o ficheiro **Dockerfile**
 
-`mkdir proxy`
+````bash
+mkdir proxy
+````
 
-`nano proxy/Dockerfile`
+`````bash
+nano proxy/Dockerfile
+`````
 
 Conteúdo do ficheiro:
 
