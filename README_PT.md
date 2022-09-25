@@ -274,7 +274,7 @@ nano /home/wit/apps/docker/apacheconf/sites/demowit.conf
 O conteúdo:
 
 ````dockerfile
- <VirtualHost *:90>
+ <VirtualHost *:80>
 	
 	ServerName demowit.local
 	ServerAlias www.demowit.local
@@ -290,17 +290,17 @@ O conteúdo:
 	</Directory>
 
     #Load the SSL module that is needed to terminate SSL on Apache
-    LoadModule ssl_module modules/mod_ssl.so
+#    LoadModule ssl_module modules/mod_ssl.so
 
     #This directive toggles the usage of the SSL/TLS Protocol Engine for proxy. 
     #Without this you cannot use HTTPS URL as your Origin Server
-    SSLProxyEngine on
+#    SSLProxyEngine on
 
     # To prevent SSL Offloading
     # Set the X-Forwarded-Proto to be https for your Origin Server to understand that this request is made over HTTPS 
 
-    RequestHeader set X-Forwarded-Proto “https”
-    RequestHeader set X-Forwarded-Port “443”	
+#    RequestHeader set X-Forwarded-Proto “https”
+#    RequestHeader set X-Forwarded-Port “443”	
 
     ErrorLog logs/demowit-error.log
     CustomLog logs/demowit-access.log combined
@@ -310,8 +310,8 @@ O conteúdo:
 
     #To ensure that and Location: headers generated from the backend are modified to point to the reverse proxy, instead of back to itself, #the ProxyPassReverse directive is most often required:
 
-    ProxyPass /wit-test http://127.0.0.1:8080/
-    ProxyPassReverse /wit-test http://127.0.0.1:8080/
+    ProxyPass /wit-test http://wit-test:8080/
+    ProxyPassReverse /wit-test http://wit-test:8080/
 	
 </VirtualHost>
 ````
@@ -338,7 +338,7 @@ O conteúdo
 A última configuração para esta etapa é a criação do container, associado à publicação da porta e o mount dos directórios/ficheiros a serem utilizados no container.
 
 ````bash
-docker container run --publish 90:90 -d --restart unless-stopped --name proxy --net redewit -v /home/wit/apps/docker/apacheconf/sites:/usr/local/apache2/conf/sites -v /home/wit/apps/docker/apacheconf/htmlfiles:/usr/local/apache2/demowit proxy
+docker container run --publish 90:80 -d --restart unless-stopped --name proxy --net redewit -v /home/wit/apps/docker/apacheconf/sites:/usr/local/apache2/conf/sites -v /home/wit/apps/docker/apacheconf/htmlfiles:/usr/local/apache2/demowit proxy
 ````
 
 Lembrando que configurei a porta 90 para o reverse proxy.
@@ -354,6 +354,14 @@ No ficheiro */etc/hosts*, deve associar o ip ao dns local que está sendo utiliz
 * (Aqui entram 
 	- imagens de demonstração,
 		* ambos cenários)
+
+Na rota **/wit-test** está correr a aplicação que configuramos anteriormente, a partir do proxy:
+
+![A test image](proxy1.png)
+
+Já na rota root, está a ser executado o landing page que configuramos:
+
+![Proxy landing page](proxy2.png)
 
 
 
