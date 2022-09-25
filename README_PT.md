@@ -2,12 +2,26 @@
 
 ## Part I – Answers for Debug Systems Issues
 
-1. 
+1. Tudo indica que estamos perante uma impossibilidade de conectar com o serviço/servidor de base de dados, pelo que minha primeira atitude perante esta situação seria veririfcar se a base de dados está disponível ou não. E caso esteja indisponível, torná-lo disponível.
+
+
 
 
 2.  
 
+
    1.  
+
+      - Tudo indica que o servidor tomcat está down. Minha primeira acção seria fazer o backup da base de dados da aplicação em causa e de seguida fazer o start do serviço tomcat para visualizar os logs, caso não inicialize.
+
+      - Os seguintes podem ser os possíveis problemas:
+
+        - **Tomcat Stoped**: 
+        - **Tomcat Server Sobrecarregado:**
+        - **Bloqueio da porta de escuta, do container/serviço tomcat:**
+
+        
+
    2. 
 
 3. 
@@ -25,10 +39,14 @@
 No meu caso, utilizei a versão 6.x do virtual box, de onde criei uma máquina virtual e instalei o SO conforme proposto.
 Garanti que todos pacotes estão actualizados, instalei o *net-tools* , o *openssh* e configurei Bridged Adapter como o tipo de rede para a VM em causa.
 
-> **NOTA:** 
->> *Aspectos ligados a segurança como o caso de alteração da porta default ssh, criação de utilizadores com privilégios limitados, login por par de chaves RSA, etc, não foram levados em consideração assumindo que não é o que está sendo avaliado. (Mas reconhecendo a necessidade).*
 
-A partir do comando `scp wit-cicd-challenge.jar wit@192.168.31.12:/home/wit/`, garanti que o ficheiro *.jar* fosse carregado da minha máquina (windows no meu caso) para a VM.
+
+> **NOTA:** 
+> > *Aspectos ligados a segurança como o caso de alteração da porta default ssh, criação de utilizadores com privilégios limitados, login por par de chaves RSA, etc, não foram levados em consideração assumindo que não é o que está sendo avaliado. (Mas reconhecendo a necessidade).*
+
+
+
+A partir do comando `scp wit-cicd-challenge.jar wit@192.168.31.12:/home/wit/`, garanti que o ficheiro **.jar** fosse carregado da minha máquina (windows no meu caso) para a VM.
 
 
 
@@ -61,7 +79,7 @@ As seguintes tecnologias foram escolhidas/utilizadas:
 |                 | Tecnologia  | Comentários                                                  |
 | :-------------- | ----------- | ------------------------------------------------------------ |
 | _Containers_    | **Docker**  |                                                              |
-| _Load Balancer_ | **HAproxy** | Primeira camada, no contacto com o exterior                  |
+| _Load Balancer_ | **HAproxy** | Primeira camada, no contacto com o exterior, servindo na porta :80 |
 | _Reverse Proxy_ | **Apache**  |                                                              |
 | Firewall        | **UFW**     | Para garantir que apenas o LB seja acedido a partir do exterior, sendo que os demais serão acedidios a partir do outros containers ou _host_ |
 
