@@ -215,7 +215,7 @@ O resultado deverá ser idêntico ao seguinte:
 
 Agora que configuramos o container da aplicação, partiremos para a configuração do reverse proxy que por sua vez fará o forward do tráfego para a aplicação.
 
-Antes de tudo, utilizei o comando `docker pull httpd:latest` para puxar a imagem da última versão do httpd.
+Antes de tudo, utilizei o comando `docker pull httpd:latest` para puxar a imagem da última versão do httpd
 
 Na pasta proxy, criamos o directório **proxy** para conter o ficheiro **Dockerfile**
 
