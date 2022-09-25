@@ -169,7 +169,7 @@ Criei também na pasta o ficheiro com o nome **Dockerfile** e copiei o seguinte 
 
 ````dockerfile
 FROM openjdk:11
-COPY wit-test/wit-cicd-challenge.jar wit-cicd-challenge.jar
+COPY wit-cicd-challenge.jar wit-cicd-challenge.jar
 ENTRYPOINT ["java", "-jar", "/wit-cicd-challenge.jar"]
 ````
 
@@ -195,7 +195,7 @@ Finda a execução do último comando, poderá visualizar as imagens em causa a 
 Até então só existe a imagem que por sua vez está pronta para ser utilizada na criação do container. O seguinte comando criará o container, permitirá que esteja visível/acessível a partir de fora na porta 8080 e ainda garantirá que seja o serviço que iniciará com o sistema operativo:
 
 ````shell
-docker run -d --restart unless-stopped -p 8080:8080 --net redewit --name wit-test
+docker run -d --restart unless-stopped -p 8080:8080 --net redewit --name wit-test wit-test
 ````
 
 É possível confirmar executando `docker ps` a existência do container e os respectivos detalhes.
@@ -245,10 +245,15 @@ EXPOSE 90
 CMD ["httpd", "-D", "FOREGROUND"]
 ````
 
-Ainda na pasta criada **proxy**, criei o ficheiro de configuração``nano httpd.conf`` com o conteúdo do seguinte link: ![Apache2 Conf File](httpd.conf)
+Ainda na pasta criada **proxy**, criei o ficheiro de configuração``nano proxy/httpd.conf`` com o conteúdo do seguinte link: ![Apache2 Conf File](httpd.conf)
 
+O Build e criação da imagem a partir do ficheiro **proxy/Dockerfile** será realizado após executar o comando
 
-O Build e criação da imagem a partir do ficheiro **proxy/Dockerfile** será realizado após executar o comando `docker build -t proxy proxy/` e o mesmo é denominado *proxy* e pode ser confirmado executando `docker images`
+````bash
+docker build -t proxy proxy/
+````
+
+e o mesmo é denominado *proxy* e pode ser confirmado executando `docker images`
 
 Segue a criação do workspace que será usado para o *mount* no container e irá conter alguns ficheiros de configuração. São 2 directórios, onde o primeiro armazena os ficheiros *.conf* e o segundo os ficheiros *html*
 
@@ -333,13 +338,7 @@ O conteúdo
 A última configuração para esta etapa é a criação do container, associado à publicação da porta e o mount dos directórios/ficheiros a serem utilizados no container.
 
 ````bash
-docker container run
---publish 90:90 
--d --restart unless-stopped 
---name proxy --net redewit
--v /home/wit/apps/docker/apacheconf/sites:/usr/local/apache2/conf/sites
--v /home/wit/apps/docker/apacheconf/htmlfiles:/usr/local/apache2/demowit
-proxy
+docker container run --publish 90:90 -d --restart unless-stopped --name proxy --net redewit -v /home/wit/apps/docker/apacheconf/sites:/usr/local/apache2/conf/sites -v /home/wit/apps/docker/apacheconf/htmlfiles:/usr/local/apache2/demowit proxy
 ````
 
 Lembrando que configurei a porta 90 para o reverse proxy.
