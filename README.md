@@ -1,38 +1,45 @@
 ## Part I – Answers for Debug Systems Issues
 
-1. Apparently there is a difficulty connecting to the DB service/server. In order to resolve this, I would choose to follow the steps below:
+#### Question 1
 
-   * Backup the database;
-   * Check the availability of the DB service/server;
-   * make the DB service available (If the above is not complied with);
+Apparently there is a difficulty connecting to the DB service/server. In order to resolve this, I would choose to follow the steps below:
 
-   
-
-
-2.  Considering the infrastructure and the error presented:
-
-
-* (2.1.) Everything indicates that the tomcat service is down. My first action would be to backup the application's database and then `start` the tomcat service to view the logs, if it doesn't start.
-
-
-* (2.2.) The following could be the possible issues:
-
-  - **Tomcat Stopped**: Solution would be to start the service.
-
-  - **Tomcat Server Overloaded:** restart the service and install a monitoring tool on the infrastructure (eg: _munin_) to identify the real cause in the next times.
-
-  - **Connection problems between Reverse Proxy and Tomcat:** check if `.conf` file has been configured correctly.
-
-  - **Blocking the listening port of the tomcat container/service:** enable the port on which the service runs.
-
-     
-
-3. 
+* Backup the database;
+* Check the availability of the DB service/server;
+* make the DB service available (If the above is not complied with);
 
 
 
+#### Question 2
 
-4. 
+Considering the infrastructure and the error presented:
+
+1. Everything indicates that the tomcat service is down. My first action would be to backup the application's database and then `start` the tomcat service to view the logs, if it doesn't start.
+
+
+
+2.  The following could be the possible issues:
+
+   - **Tomcat Stopped**: Solution would be to start the service.
+
+
+   - **Tomcat Server Overloaded:** restart the service and install a monitoring tool on the infrastructure (eg: _munin_) to identify the real cause in the next times.
+
+
+   - **Connection problems between Reverse Proxy and Tomcat:** check if `.conf` file has been configured correctly.
+
+
+   - **Blocking the listening port of the tomcat container/service:** enable the port on which the service runs.
+
+
+
+#### Question 3
+
+
+
+#### Question 4
+
+
 
 
 
@@ -120,7 +127,7 @@ There are three (3) containers:
 - The second for the _Reverse Proxy_, and
 - The third, for the Spring Boot application.
 
-![A test image](sp.png)
+![A test image](assets/sp.png)
 
 The following tools were chosen/used:
 
@@ -208,7 +215,7 @@ At this point, we can already visualize the result from the outside (browser of 
 
 The result should be as shown bellow:
 
-![A test image](c1.png)
+![A test image](assets/c1.png)
 
 
 
@@ -244,7 +251,7 @@ EXPOSE 90
 CMD ["httpd", "-D", "FOREGROUND"]
 ````
 
-Still in the created **proxy** folder, I created the configuration file``nano proxy/httpd.conf`` with the content from ![that link](httpd.conf) (Apache2 Conf File).
+Still in the created **proxy** folder, I created the configuration file``nano proxy/httpd.conf`` with the content from [that link]((assests/httpd.conf) (Apache2 Conf File).
 
 Build and creation of the image from the **proxy/Dockerfile** file will be performed after executing the command:
 
@@ -340,7 +347,7 @@ In the */etc/hosts* file of the host machine, the localhost IP must be associate
 
 On the **/** route, the application that we configured earlier is running, from the proxy container:
 
-![A test image](proxy1.png)
+![A test image](assets/proxy1.png)
 
 > We have configured the proxy, the intermediary between the LB Server and the Spring Boot Application.
 
@@ -418,15 +425,15 @@ Once this is done, the configuration has been successfully completed, so it can 
 
 On the **/** route, from the **:80** port, the application that we previously configured is running, from the proxy:
 
-![A test image](lb1.png)
+![A test image](assets/lb1.png)
 
 On the **/wit-test** route, from the **:80** port,
 
-![A test image](lb2.png)
+![A test image](assets/lb2.png)
 
 In the **/** route of the **:8404** port, returns the haproxy dashboard:
 
-![A test image](lb-dash.png)
+![A test image](assets/lb-dash.png)
 
 
 
@@ -460,19 +467,19 @@ sudo ufw enable
 
 The containers created, as proposed:
 
-![A test image](rf.png)
+![A test image](assets/rf.png)
 
 
 
 Executing `curl http://demowit.local/wit-test/` the result is shown bellow:
 
-![A test image](proxy2.png)
+![A test image](assets/proxy2.png)
 
 
 
 Also from outside, using /wit-test route:
 
-![A test image](final-outside.png)
+![A test image](assets/final-outside.png)
 
 
 
