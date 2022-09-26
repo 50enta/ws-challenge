@@ -118,7 +118,7 @@ There are three (3) containers:
 
 - The first for the _Load Balancer_,
 - The second for the _Reverse Proxy_, and
-- The third party for the SpringBoot application.
+- The third, for the Spring Boot application.
 
 ![A test image](sp.png)
 
@@ -212,11 +212,11 @@ The result should be as shown bellow:
 
 
 
-### Criação e configuração do Reverse Proxy
+### Reverse Proxy creation and configuration
 
-Agora que configurei o container da aplicação, partirei para a configuração do reverse proxy que por sua vez fará o forward do tráfego para a aplicação.
+Now that I've configured the application's container, I'm going to configure the reverse proxy that will forward traffic to the application.
 
-Antes de tudo, utilizei o comando `docker pull httpd:latest` para puxar a imagem da última versão do httpd. Na pasta proxy, criei o directório **proxy** para conter o ficheiro **Dockerfile**  e outros relacionados.
+First of all, I used the `docker pull httpd:latest` command to pull the image from the latest version of httpd. In the proxy folder, I created the **proxy** directory to contain the **Dockerfile** and related files.
 
 ````bash
 mkdir proxy
@@ -226,7 +226,7 @@ mkdir proxy
 nano proxy/Dockerfile
 `````
 
-Conteúdo do ficheiro:
+The file Content:
 
 ````dockerfile
 # The Base Image used to create this Image
@@ -244,17 +244,17 @@ EXPOSE 90
 CMD ["httpd", "-D", "FOREGROUND"]
 ````
 
-Ainda na pasta criada **proxy**, criei o ficheiro de configuração``nano proxy/httpd.conf`` com o conteúdo do seguinte link: ![Apache2 Conf File](httpd.conf)
+Still in the created **proxy** folder, I created the configuration file``nano proxy/httpd.conf`` with the contents of the following link: ![Apache2 Conf File](httpd.conf)
 
-O Build e criação da imagem a partir do ficheiro **proxy/Dockerfile** será realizado após executar o comando
+Build and creation of the image from the **proxy/Dockerfile** file will be performed after executing the command:
 
 ````bash
 docker build -t proxy proxy/
 ````
 
-e o mesmo é denominado *proxy* e pode ser confirmado executando `docker images`
+and the same is named *proxy* and can be confirmed by running `docker images`.
 
-Segue a criação do workspace que será usado para o *mount* no container e irá conter alguns ficheiros de configuração. São 2 directórios, onde o primeiro armazena os ficheiros `.conf` e o segundo os ficheiros `.html`.
+Here's the creation of the workspace that will be used to *mount* in the container and will contain some configuration files. There are 2 directories, where the first one stores the `.conf` files and the second the `.html` files.
 
 ````bash
 mkdir -p /home/wit/apps/docker/apacheconf/sites
@@ -264,13 +264,13 @@ mkdir -p /home/wit/apps/docker/apacheconf/sites
 mkdir -p /home/wit/apps/docker/apacheconf/htmlfiles
 ````
 
-Agora a criação do ficheiro *.conf* denominado *demowit.conf*
+Now the creation of the *.conf* file named *demowit.conf*:
 
 ````bash
 nano /home/wit/apps/docker/apacheconf/sites/demowit.conf
 ````
 
-para conter o conteúdo a seguir:
+to contain the following content:
 
 ````dockerfile
  <VirtualHost *:80>
@@ -297,13 +297,13 @@ para conter o conteúdo a seguir:
 </VirtualHost>
 ````
 
-Agora a criação do ficheiro html que servirá para landing page:
+Now the creation of the `.html` file that will serve as the landing page:
 
 ````bash
 nano /home/wit/apps/docker/apacheconf/htmlfiles/index.html
 ````
 
-O conteúdo
+The content:
 
 ````html
 <html>
@@ -316,37 +316,37 @@ O conteúdo
 </html>
 ````
 
-A última configuração para esta etapa é a criação do container, associado à publicação da porta e o _mount_ dos directórios/ficheiros a serem utilizados no container.
+The last configuration for this step is the creation of the container, associated with the publication of the port and the _mount_ of the directories/files to be used in the container, by using the command:
 
 ````bash
 docker container run --publish 90:80 -d --restart unless-stopped --name proxy --net redewit -v /home/wit/apps/docker/apacheconf/sites:/usr/local/apache2/conf/sites -v /home/wit/apps/docker/apacheconf/htmlfiles:/usr/local/apache2/demowit proxy
 ````
 
-Lembrando que configurei a porta 90 para o reverse proxy.
+Remembering that I configured port **:90** for the reverse proxy.
 
-No ficheiro */etc/hosts* da máquina host, deve se associar o IP ao DNS local que está sendo utilizado nos ficheiros de configuração:
+In the */etc/hosts* file of the host machine, the localhost IP must be associated with the local DNS that is being used in the configuration files:
 
 `````bash
-> 127.0.0.1			demowit.local
+127.0.0.1			demowit.local
 `````
 
 
 
->**Para testar esta configuração:**
+>**To test this configuration:**
 >
->> `<ip-do-seu-servidor>:90` no browser, fora do server e mesma rede, e `curl demowit.local:90/` dentro do server
+>> `<ip-do-seu-servidor>:90` in the browser, outside the server and the same network, and `curl demowit.local:90/` inside the server (command line).
 
 
 
-Na rota **/** está correr a aplicação que configuramos anteriormente, a partir do proxy:
+On the **/** route, the application that we configured earlier is running, from the proxy container:
 
 ![A test image](C:\xampp\htdocs\ws-challenge\proxy1.png)
 
-> Até então configuramos o proxy, o intermediário entre o LB Server e a Aplicação SpringBoot.
+> We have configured the proxy, the intermediary between the LB Server and the Spring Boot Application.
 
 
 
-### Criação e configuração do LB
+### LB creation and configuration
 
 Utizei HAproxy como o Load Balancer. Primeiro passo foi criar o ficheiro de configuração, para configurar o funcionamento do container:
 
