@@ -191,7 +191,7 @@ docker build -t wit-test wit-test/
 
 Note that the first parameter refers to the image name and the second to the folder where you should find the files to be used for the build.
 
-After executing the last command, it is possible to view the images in question using the `docker images` command
+After executing the last command, it is possible to view the images in question using the `docker images` command.
 
 Now there is only the image that is ready to be used in the creation of the container. The following command will create the container, allow it to be visible/accessible from the outside on port **:8080** and also ensure that it is the service that will start with the operating system:
 
@@ -379,13 +379,21 @@ frontend myfrontend
   bind :90
   default_backend webservers
 
+use_backend app-b if { path /wit-test } || { path_beg /wit-test/ }
+
 backend webservers
   server s1 proxy:80 check
+  
+backend app-b
+  http-request replace-path /wit-test(/)?(.*) /\2
+  server s2 proxy:80 check maxconn 30
 ````
 
 the LB container will serve on port **:90** and traffic from port **:80** of the host machine will be redirected to port **:90** of the LB container.
 
 The HAproxy dashboard will also be available on port **:8404**, for management.
+
+The `app-b` is also pointing to the `proxy:80`, it's a way to include /wit-test route. Then, **/** and **/wit-test** are pointing to same app.
 
 Being in the directory where we created the configuration file, I executed the following command, to create the container, configure the port rule and the volume mount of the file used.
 
@@ -410,11 +418,15 @@ Once this is done, the configuration has been successfully completed, so it can 
 
 On the **/** route, from the **:80** port, the application that we previously configured is running, from the proxy:
 
-![A test image](C:\xampp\htdocs\ws-challenge\lb1.png)
+![A test image](lb1.png)
+
+On the **/wit-test** route, from the **:80** port,
+
+![A test image](lb2.png)
 
 In the **/** route of the **:8404** port, returns the haproxy dashboard:
 
-![A test image](C:\xampp\htdocs\ws-challenge\lb-dash.png)
+![A test image](lb-dash.png)
 
 
 
@@ -448,13 +460,19 @@ sudo ufw enable
 
 The containers created, as proposed:
 
-![A test image](C:\xampp\htdocs\ws-challenge\rf.png)
+![A test image](rf.png)
 
 
 
+Executing `curl http://demowit.local/wit-test/` the result is shown bellow:
+
+![A test image](proxy2.png)
 
 
 
+Also from outside, using /wit-test route:
+
+![A test image](final-outside.png)
 
 
 
