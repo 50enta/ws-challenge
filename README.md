@@ -12,12 +12,12 @@
 2.  Considering the infrastructure and the error presented:
 
 
-* **(2.1.)** Everything indicates that the tomcat service is down. My first action would be to backup the application's database and then `start` the tomcat service to view the logs, if it doesn't start.
+* (2.1.) Everything indicates that the tomcat service is down. My first action would be to backup the application's database and then `start` the tomcat service to view the logs, if it doesn't start.
 
 
-* **(2.2.)** The following could be the possible issues:
+* (2.2.) The following could be the possible issues:
 
-  - **Tomcat Stoped**: Solution would be to start the service.
+  - **Tomcat Stopped**: Solution would be to start the service.
 
   - **Tomcat Server Overloaded:** restart the service and install a monitoring tool on the infrastructure (eg: _munin_) to identify the real cause in the next times.
 
@@ -133,7 +133,7 @@ The following tools were chosen/used:
 
 
 
-### Network configuration
+### Network Configuration
 
 Before starting with the creation of containers, I created a bridge network to later connect all the containers that are created. The following command was used to create the network named **redewit**:
 
@@ -145,7 +145,7 @@ Executing `docker network ls`, it was possible to confirm the existence of the p
 
 
 
-### Spring Boot container creation and configuration
+### Spring Boot Container: Creation and Configuration
 
 For organizational reasons, I created folders to organize the files related to each container. The container associated with the Spring Boot application will be called *wit-test*, so the folder created also has the same name.
 
@@ -212,7 +212,7 @@ The result should be as shown bellow:
 
 
 
-### Reverse Proxy creation and configuration
+### Reverse Proxy: Creation and Configuration
 
 Now that I've configured the application's container, I'm going to configure the reverse proxy that will forward traffic to the application.
 
@@ -244,7 +244,7 @@ EXPOSE 90
 CMD ["httpd", "-D", "FOREGROUND"]
 ````
 
-Still in the created **proxy** folder, I created the configuration file``nano proxy/httpd.conf`` with the contents of the following link: ![Apache2 Conf File](httpd.conf)
+Still in the created **proxy** folder, I created the configuration file``nano proxy/httpd.conf`` with the content from ![that link](httpd.conf) (Apache2 Conf File).
 
 Build and creation of the image from the **proxy/Dockerfile** file will be performed after executing the command:
 
@@ -340,21 +340,21 @@ In the */etc/hosts* file of the host machine, the localhost IP must be associate
 
 On the **/** route, the application that we configured earlier is running, from the proxy container:
 
-![A test image](C:\xampp\htdocs\ws-challenge\proxy1.png)
+![A test image](proxy1.png)
 
 > We have configured the proxy, the intermediary between the LB Server and the Spring Boot Application.
 
 
 
-### LB creation and configuration
+### Load Balancer: Creation and Configuration
 
-Utizei HAproxy como o Load Balancer. Primeiro passo foi criar o ficheiro de configuração, para configurar o funcionamento do container:
+I used **HAproxy** as the Load Balancer. First step was to create the configuration file, to configure the operation of the container, for that I used the command:
 
 ````bash
 nano haproxy.cfg
 ````
 
-no ficheiro, foi incluso o seguinte código:
+The following code was included in the file:
 
 ````bash
 global
@@ -383,11 +383,11 @@ backend webservers
   server s1 proxy:80 check
 ````
 
-o container LB servirá na porta **:90** e o tráfego da porta **:80** do da máquina host será redireccionada para a porta **:90** do container do LB.
+the LB container will serve on port **:90** and traffic from port **:80** of the host machine will be redirected to port **:90** of the LB container.
 
-Estará também disponível o dahsboard do HAproxy na porta **:8404**, para a gestão.
+The HAproxy dashboard will also be available on port **:8404**, for management.
 
-Estando no directório onde criamos o ficheiro de configuração, executamos o seguinte comando, para criar o container, configurar a regra das portas e o mount do volume do cheiro utilizado.
+Being in the directory where we created the configuration file, I executed the following command, to create the container, configure the port rule and the volume mount of the file used.
 
 ````bash
 sudo docker run -d \
@@ -400,27 +400,27 @@ sudo docker run -d \
    haproxytech/haproxy-alpine:2.4
 ````
 
-Feito isto, a configuração foi concluída com sucesso, pelo que pode ser testado.
+Once this is done, the configuration has been successfully completed, so it can be tested..
 
 
 
-> **Para testar esta configuração:**
+> **To test this configuration:**
 >
-> > `<ip-do-seu-servidor>` no browser, fora do server e mesma rede, e `curl demowit.local` dentro do server
+> > `<ip-do-seu-servidor>` in the browser, outside the server and the same network, and `curl demowit.local` inside the server.
 
-Na rota **/** , da porta **:80** está correr a aplicação que configuramos anteriormente, a partir do proxy:
+On the **/** route, from the **:80** port, the application that we previously configured is running, from the proxy:
 
 ![A test image](C:\xampp\htdocs\ws-challenge\lb1.png)
 
-Na rota **/** da porta **:8404**, retorna o dashboard do haproxy:
+In the **/** route of the **:8404** port, returns the haproxy dashboard:
 
 ![A test image](C:\xampp\htdocs\ws-challenge\lb-dash.png)
 
 
 
-### Configurações gerais do processo
+### General configurations
 
-Tendo o fluxo todo está funcionar, activei o firewall para garantir que os acessos serão apenas a partir da porta **:80**,  **:443**,  **:8404** para http e porta **:22** para  SSH.
+Having the whole flow working, I activated the firewall to ensure that access will only be from port **:80**, **:443**, **:8404** for http and port **:22* * for SSH.
 
 ````bash
 sudo ufw limit 22/tcp
@@ -444,9 +444,9 @@ sudo ufw enable
 
 
 
-### Conclusão
+### Conclusion
 
-Os containers criados, conforme proposto:
+The containers created, as proposed:
 
 ![A test image](C:\xampp\htdocs\ws-challenge\rf.png)
 
