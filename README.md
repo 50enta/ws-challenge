@@ -251,7 +251,7 @@ EXPOSE 90
 CMD ["httpd", "-D", "FOREGROUND"]
 ````
 
-Still in the created **proxy** folder, I created the configuration file``nano proxy/httpd.conf`` with the content from [that link](assests/httpd.conf) (Apache2 Conf File).
+Still in the created **proxy** folder, I created the configuration file``nano proxy/httpd.conf`` with the content from [that link](https://github.com/50enta/ws-challenge/blob/main/assets/httpd.conf) (Apache2 Conf File).
 
 Build and creation of the image from the **proxy/Dockerfile** file will be performed after executing the command:
 
