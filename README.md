@@ -16,20 +16,19 @@ Considering the infrastructure and the error presented:
 
 1. Everything indicates that the tomcat service is down. My first action would be to backup the application's database and then `start` the tomcat service to view the logs, if it doesn't start.
 
-
-
 2.  The following could be the possible issues:
 
    - **Tomcat Stopped**: Solution would be to start the service.
-
-
-   - **Tomcat Server Overloaded:** restart the service and install a monitoring tool on the infrastructure (eg: _munin_) to identify the real cause in the next times.
-
-
-   - **Connection problems between Reverse Proxy and Tomcat:** check if `.conf` file has been configured correctly.
-
-
-   - **Blocking the listening port of the tomcat container/service:** enable the port on which the service runs.
+   
+   
+      - **Tomcat Server Overloaded:** restart the service and install a monitoring tool on the infrastructure (eg: _munin_) to identify the real cause in the next times.
+   
+   
+      - **Connection problems between Reverse Proxy and Tomcat:** check if `.conf` file has been configured correctly.
+   
+   
+      - **Blocking the listening port of the tomcat container/service:** enable the port on which the service runs.
+   
 
 
 
@@ -39,7 +38,7 @@ I believe it's necessary to add variable definition (as a function) to reference
 
 Example could be:
 
-````json
+````
  variable "ENV" {
     type = string
     default = "default-value"
@@ -50,17 +49,13 @@ Example could be:
 
 #### Question 4
 
-My first action would be to try to resetting the master user, in order to recover the writing privileges and assign them to the users according to the context.
-
-More details on support would find [here](https://aws.amazon.com/premiumsupport/knowledge-center/reset-master-user-password-rds/), at official support platform.
+My first action would be to try to resetting the master user, in order to recover the writing privileges and assign them to the users according to the context. More details on support would find [here](https://aws.amazon.com/premiumsupport/knowledge-center/reset-master-user-password-rds/), at official support platform.
 
 
 
 
 
 ## Part II – Linux Laboratory
-
-
 
 >The IP Address my change, depending on network you are connected. Use `ip a` to check the IP assigned to your VM copy.
 
@@ -498,6 +493,5 @@ Executing `curl http://demowit.local/wit-test/` the result is shown bellow:
 Also from outside, using /wit-test route:
 
 ![A test image](assets/final-outside.png)
-
 
 
