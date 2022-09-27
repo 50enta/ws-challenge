@@ -35,23 +35,38 @@ Considering the infrastructure and the error presented:
 
 #### Question 3
 
+I believe it's necessary to add variable definition (as a function) to referenced file, then use in tags.tf appropriately.
+
+Example could be:
+
+````json
+ variable "ENV" {
+    type = string
+    default = "default-value"
+}
+````
+
 
 
 #### Question 4
 
+My first action would be to try to resetting the master user, in order to recover the writing privileges and assign them to the users according to the context.
 
+More details on support would find [here](https://aws.amazon.com/premiumsupport/knowledge-center/reset-master-user-password-rds/), at official support platform.
 
 
 
 ## Part II – Linux Laboratory
 
->
+
+
+>The IP Address my change, depending on network you are connected. Use `ip a` to check the IP assigned to your VM copy.
 
 
 
 ### Virtual Machine and Operating System
 
-I used virtualBox version 6.x, where I created a virtual machine and installed the Operating System as proposed. Also made sure that all packages are up to date, installed *net-tools* , *openssh* and set _Bridged Adapter_ as the network type for the VM.
+I used virtualBox version 6.x, where I created a virtual machine and installed the Operating System as proposed. Also made sure that all packages are up to date, installed *nano* , *openssh*, *ufw* and set _Bridged Adapter_ as the network type for the VM.
 
 
 
@@ -77,10 +92,11 @@ These commands were executed to create `wit` user and add him to sudo group:
 
 ```bash
 sudo adduser wit
+sudo passwd wit
 ```
 
 ```bash
-sudo usermod -aG sudo wit
+sudo usermod -aG wheel wit
 ```
 
 To test its operation, just execute `su wit` to login using wit user.
@@ -96,7 +112,7 @@ Now we have the wit user created and with the necessary privileges to move forwa
 
 
 ````bash
-sudo snapd install docker
+sudo yum install docker
 ````
 
 In order to run docker without sudo, it was necessary to create a group and associate the user in order to have the necessary privileges.
@@ -408,7 +424,7 @@ Being in the directory where we created the configuration file, I executed the f
 sudo docker run -d \
    --name haproxy \
    --net redewit \
-   -v $(pwd):/usr/local/etc/haproxy:ro \
+   -v $(pwd):/usr/local/etc/haproxy:z \
    -p 80:90 \
    -p 8404:8404 \
    --restart unless-stopped \
